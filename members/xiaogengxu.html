@@ -1,14 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Xiaogeng Xu's Page</title>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSE 135 - Xiaogeng Xu</title>
+    <link rel="icon" href="favicon.ico" />
 
-<body>
+    <style>
+      body {
+        background-color: #F5F5F7;
+        color: #1D1D1F;
+      }
 
-</body>
+      header {
+        margin: 0 40px;
+        border-bottom: 1px solid grey;
+      }
+
+      main {
+        display: flex;
+        margin: 20px;
+      }
+
+      intro {
+        flex: 1;
+        flex-direction: column;
+
+      }
+
+      intro section {
+        background-color: white;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 20px;
+        /* gap: 20px; */
+      }
+
+      photo {
+        text-align: center;
+        flex: 1;
+        background-color: white;
+        margin: 20px;
+        border-radius: 10px;
+        padding: 10px;
+        max-width: 200px;
+      }
+
+      a {
+        color: #0066CC;
+      }
+
+      a:hover {
+        color: rgb(233, 8, 8);
+      }
+
+      footer {
+        text-align: center;
+        border-top: 1px solid gray;
+        padding-top: 20px;
+        margin: 0 40px;
+      }
+
+      del {
+        color: #d6d6dc;
+      }
+
+      li {
+        margin: 5px 0;
+      }
+      
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>CSE 135</h1>
+      <h2>Summer 2025 <a href="https://1deca.de">1Deca.de</a></h2>
+    </header>
+
+    <main>
+      <intro>
+        <section>
+          <h2>Xiaogeng Xu</h2>
+          <ul>
+            <li>He / Him / His</li>
+            <li>UC San Diego</li>
+            <li>Computer Science</li> 
+            <li><a href="https://github.com/OctFog/">Github</a></li>
+          </ul>
+        </section>
+
+      </intro>
+
+      <photo>
+        <img src="../images/photo.png" alt="photo_cartoon" width="200">
+      </photo>
+    </main>
+    
+    <footer>
+      A simple page for CSE 135 made with ☕️ by Xiaogeng Xu
+    </footer>
+
+  </body>
 
 </html>
