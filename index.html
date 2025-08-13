@@ -1,18 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSE 135 1Decade Team Page</title>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSE 135 - Team 1Decade</title>
+    <link rel="icon" href="favicon.ico" />
 
-<body>
-  <h1>CSE 135 HW1 Lives!</h1>
-  <script>
-    document.write(`Live @ ${new Date()}`);
-  </script>
+    <style>
+      body {
+        background-color: #F5F5F7;
+        color: #1D1D1F;
+      }
 
-</body>
+      header {
+        margin: 0 40px;
+        border-bottom: 1px solid grey;
+      }
+
+      main {
+        display: flex;
+        margin: 20px;
+      }
+
+      homework {
+        flex: 2;
+        flex-direction: column;
+      }
+
+      homework section {
+        background-color: white;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 20px;
+        /* gap: 20px; */
+      }
+
+      team-intro {
+        background-color: white;
+        margin: 20px;
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      a {
+        color: #0066CC;
+      }
+
+      a:hover {
+        color: rgb(233, 8, 8);
+      }
+
+      footer {
+        text-align: center;
+        border-top: 1px solid gray;
+        padding-top: 20px;
+        margin: 0 40px;
+      }
+
+      del {
+        color: #d6d6dc;
+      }
+
+      li {
+        margin: 5px 0;
+      }
+      
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>CSE 135</h1>
+      <h2>Summer 2025</h2>
+    </header>
+
+    <main>
+      <homework>
+        <section>
+          <h2>Homework 1</h2>
+          <ul>
+            <li><a href="https://www.1deca.de">This site</a></li>
+            <li><a href="https://collector.1deca.de">Collector</a></li> 
+            <li><a href="https://reporting.1deca.de">Reporting</a></li>
+            <li><a href="https://1deca.de/hello.php">PHP</a></li>
+            <li><a href="">robots.txt</a></li>
+            <li><a href="">404</a></li>
+            <li><a href="">Github Repo</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Homework 2</h2>
+          <p>TBD</p>
+        </section>
+      </homework>
+
+      <team-intro>
+        <h2>Team 1Decade</h2>
+        <p>Team Members</p>
+        <ul>
+          <li><a href="https://1deca.de/members/xiaogengxu">Xiaogeng Xu</a></li>
+          <li><del>Chat GPT</del></li>
+          <li><del>Gemini</del></li>
+        </ul>
+      </team-intro>
+    </main>
+    
+    <footer>
+      A simple page for CSE 135 made with ☕️ by Xiaogeng Xu
+    </footer>
+
+  </body>
 
 </html>
