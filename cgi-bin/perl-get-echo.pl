@@ -12,7 +12,7 @@ END
 
 print "<p>Hello, my name is <strong>Xiaogneg Xu</strong></p>";
 # The Query String is simply an environment variable
-print "<b>Query String:</b> $ENV{QUERY_STRING}<br />\n";
+print "<b>Raw Query String:</b> $ENV{QUERY_STRING}<br />\n";
 
 # Credit for this code to parse the Query string:
 # https://www.mediacollege.com/internet/perl/query-string.html
@@ -28,12 +28,15 @@ if (length ($ENV{'QUERY_STRING'}) > 0){
 
 #Print out the Query String
 $loop = 0;
+print "<b>Formatted Query String:</b> $ENV{QUERY_STRING}<br />\n";
+print "<ul>"
 foreach my $key (%in) {
   $loop += 1;
   if($loop % 2 != 0) {
-    print "$key = $in{$key}<br/>\n";
+    print "<li>$key = $in{$key}<br/></li>\n";
   }
 }
+print "</ul>"
 
 # Print the HTML file bottom
 print "</body></html>";
