@@ -16,6 +16,12 @@
       header {
         margin: 0 40px;
         border-bottom: 1px solid grey;
+        display: flex;
+      }
+
+      .class-info {
+        flex: 2;
+        flex-direction: column;
       }
 
       main {
@@ -24,8 +30,9 @@
       }
 
       .homework {
-        flex: 2;
+        /* flex: 2; */
         flex-direction: column;
+        flex: 1;
       }
 
       .homework section {
@@ -33,6 +40,7 @@
         border-radius: 10px;
         padding: 10px;
         margin: 20px;
+        /* width: 100%; */
       }
 
       .team-intro {
@@ -65,14 +73,38 @@
       li {
         margin: 5px 0;
       }
+
+      .link-container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      perl-list {
+        flex: 1;
+      }
+
+      c-list {
+        flex: 1;
+      }
       
     </style>
   </head>
 
   <body>
     <header>
-      <h1>CSE 135</h1>
-      <h2>Summer 2025</h2>
+      <section class="class-info">
+        <h1>CSE 135</h1>
+        <h2>Summer 2025</h2>
+      </section>
+      <section class="team-intro">
+        <h2>Team 1Decade</h2>
+        <p>Team Members</p>
+        <ul>
+          <li><a href="https://1deca.de/members/xiaogengxu.html">Xiaogeng Xu</a></li>
+          <li><del>Chat GPT</del></li>
+          <li><del>Gemini</del></li>
+        </ul>
+      </section>
     </header>
 
     <main>
@@ -92,23 +124,82 @@
           </ul>
         </section>
 
-        <section>
+        <section class="homework2">
           <h2>Homework 2</h2>
+          <h3>CGI</h3>
+          <div class="link-container">
+          <perl-list>
+            <h4>Perl</h4>
+            <ul>
+            <li><a href="https://1deca.de/cgi-bin/perl-html-world.pl">Hello, Perl! </a></li>
+            <li><a href="https://1deca.de/cgi-bin/perl-json-world.pl">Hello, Perl! (JSON)</a></li>
+            <li><a href="https://1deca.de/cgi-bin/perl-env.pl">Environment Variables (Manually) </a></li>
+            <li> <a href="https://1deca.de/cgi-bin/perl-env-pm.pl">Environment Variables (CGI.pm)</a></li>
+            <li><a href="https://1deca.de/cgi-bin/perl-get-echo.pl">GET Echo </a></li>
+            <li><a href="https://1deca.de/cgi-bin/perl-post-echo.pl">POST Echo </a></li>
+            <li><a href="https://1deca.de/cgi-bin/perl-general-echo.pl">General Echo </a></li>
+            <li><a href="https://1deca.de/perl-cgiform.html">Sessioning</a>
+              (<a href="https://1deca.de/cgi-bin/perl-sessions-1.pl">page 1</a>) 
+              (<a href="https://1deca.de/cgi-bin/perl-sessions-2.pl">page 2</a>) 
+              (<a href="https://1deca.de/cgi-bin/perl-destroy-session.pl">destroy session</a>)
+            </li>
+            </ul>
+          </perl-list>
+          <c-list>
+            <h4>C</h4>
+            <ul>
+                <li><a href="https://1deca.de/cgi-bin/c-hello-html-world.cgi">Hello, C!</a></li>
+                <li><a href="https://1deca.de/cgi-bin/c-hello-json-world.cgi">Hello, C! (JSON)</a></li>
+                <li><a href="https://1deca.de/cgi-bin/c-env.cgi">Environment Variables </a></li>
+                <li><a href="https://1deca.de/cgi-bin/c-get-echo.cgi">GET Echo</a></li>
+                <li><a href="https://1deca.de/cgi-bin/c-post-echo.cgi">POST Echo</a></li>
+                <li><a href="https://1deca.de/cgi-bin/c-general-request-echo.cgi">General Echo </a></li>
+                <li><a href="https://1deca.de/c-cgiform.html">Sessioning</a>
+                    (<a href="https://1deca.de/cgi-bin/c-sessions-1.cgi">page 1</a>) 
+                    (<a href="https://1deca.de/cgi-bin/c-sessions-2.cgi">page 2</a>) 
+                    (<a href="https://1deca.de/cgi-bin/c-destroy-session.cgi">destroy session</a>)
+                </li>
+            </ul>
+          </c-list>
+
+          <php-list>
+            <h4>PHP</h4>
+            <ul>
+              <li><a href="https://1deca.de/cgi-bin/php-hello-html-world.php">Hello, PHP!</a></li>
+              
+              <li><a href="https://1deca.de/cgi-bin/php-hello-json-world.php">Hello, PHP!(JSON)</a></li>
+
+              <li><a href="https://1deca.de/cgi-bin/php-environment.php">Environment</a></li>
+
+              <li><a href="https://1deca.de/cgi-bin/php-get-echo.php">GET Echo</a></li>
+
+              <li><a href="https://1deca.de/cgi-bin/php-post-echo.php">POST Echo</a></li>
+              <li><a href="https://1deca.de/cgi-bin/php-general-request-echo.php">General Echo</a></li>
+              <li><a href="https://1deca.de/cgi-bin/php-state-demo.php">Sessioning</a></li>
+            </ul>
+          </php-list>
+
+          <nodejs-list>
+            <h4>NodeJS</h4>
+            <ul>
+              <li><a href="https://1deca.de/cgi-bin/">node-hello-html-world.js</a></li>
+              <li><a href="https://1deca.de/cgi-bin/">hello-json-world</a></li>
+              <li><a href="https://1deca.de/cgi-bin/">environment</a></li>
+              <li><a href="https://1deca.de/cgi-bin/">get-echo</a></li>
+              <li><a href="https://1deca.de/cgi-bin/">post-echo</a></li>
+              <li><a href="https://1deca.de/cgi-bin/">general-request-echo</a></li>
+              <li><a href="https://1deca.de/cgi-bin/">state-demo</a></li>
+            </ul>
+          </nodejs-list>
+
           <ul>
             <li><a href="https://www.1deca.de/cgi.html">cgi</a></li>
           </ul>
+          </div>
         </section>
       </section>
 
-      <section class="team-intro">
-        <h2>Team 1Decade</h2>
-        <p>Team Members</p>
-        <ul>
-          <li><a href="https://1deca.de/members/xiaogengxu.html">Xiaogeng Xu</a></li>
-          <li><del>Chat GPT</del></li>
-          <li><del>Gemini</del></li>
-        </ul>
-      </section>
+
     </main>
     
     <footer>
