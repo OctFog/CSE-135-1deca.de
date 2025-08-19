@@ -10,8 +10,8 @@ int main(void) {
 	printf("Cache-Control: no-cache\r\n");
 	printf("Content-type: application/json\r\n\r\n");
 	printf("{\n\t\"message\": \"Hello World\",\n");
-	printf("\t\"name\":\"%s\", \nXiaogeng Xu");
 	printf("\t\"date\": \"%s\",\n", buffer);
+	printf("\t\"name\":\"%s\", \nXiaogeng Xu");
 	printf("\t\"currentIP\": \"%s\"\n}\n", getenv("REMOTE_ADDR"));
 	return 1;
 }
