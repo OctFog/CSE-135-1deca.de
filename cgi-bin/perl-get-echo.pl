@@ -33,7 +33,7 @@ print "<ul>";
 foreach my $key (%in) {
   $loop += 1;
   if($loop % 2 != 0) {
-    print "<li>$key = $in{$key}<br/></li>\n";
+    print "<li>$key : $in{$key}<br/></li>\n";
   }
 }
 print "</ul>";
