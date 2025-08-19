@@ -29,14 +29,14 @@ if (length ($ENV{'QUERY_STRING'}) > 0){
 #Print out the Query String
 $loop = 0;
 print "<b>Formatted Query String:</b> $ENV{QUERY_STRING}<br />\n";
-print "<ul>"
+print "<ul>";
 foreach my $key (%in) {
   $loop += 1;
   if($loop % 2 != 0) {
     print "<li>$key = $in{$key}<br/></li>\n";
   }
 }
-print "</ul>"
+print "</ul>";
 
 # Print the HTML file bottom
 print "</body></html>";
