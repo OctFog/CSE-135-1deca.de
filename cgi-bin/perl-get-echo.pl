@@ -28,7 +28,7 @@ if (length ($ENV{'QUERY_STRING'}) > 0){
 
 #Print out the Query String
 $loop = 0;
-print "<b>Formatted Query String:</b> $ENV{QUERY_STRING}<br />\n";
+print "<b>Formatted Query String:</b> <br />\n";
 print "<ul>";
 foreach my $key (%in) {
   $loop += 1;
