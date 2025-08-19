@@ -11,8 +11,8 @@ $date = date('Y-m-d H:i:s');
     <title>Hello, PHP!</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <h1>Hello, PHP</h1>
     <p>Current Time: <?= $date ?></p>
-    <p>our IP Address: <?= $ip ?></p>
+    <p>Your IP Address: <?= $ip ?></p>
 </body>
 </html>
