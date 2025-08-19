@@ -76,6 +76,11 @@
 
       .link-container {
         display: flex;
+        flex-direction: column;
+      }
+
+      language-list {
+        display: flex;
         flex-direction: row;
       }
 
@@ -139,6 +144,7 @@
           <h2>Homework 2</h2>
           <h3>CGI</h3>
           <div class="link-container">
+          <language-list>
           <perl-list>
             <h4>Perl</h4>
             <ul>
@@ -208,10 +214,15 @@
             </ul>
             </ul>
           </nodejs-list>
+          </language-list>
 
+          <others-link>
+          <h4>Ohters</h4>
           <ul>
-            <li><a href="https://www.1deca.de/cgi.html">cgi</a></li>
+            <li><a href="https://www.1deca.de/cgi.html">CGI Overview & Source Code</a></li>
+            <li><a href="https://github.com/OctFog/CSE-135-1deca.de/tree/main/src">Source Code in Github Repo</a></li>
           </ul>
+          </others-link>
           </div>
         </section>
       </section>
