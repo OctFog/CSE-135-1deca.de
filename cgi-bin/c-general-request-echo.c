@@ -17,7 +17,26 @@ int main(int argc, char **argv, char **envp)
   printf("<table>\n");
   printf("<tr><td>Protocol:</td><td>%s</td></tr>\n", getenv("SERVER_PROTOCOL"));
   printf("<tr><td>Method:</td><td>%s</td></tr>\n", getenv("REQUEST_METHOD"));
+
+  printf("<table> Formatted Query String:");
+  char *query = strdup(getenv("QUERY_STRING"));
+  char *tokens = query;
+  char *p = query;
+  while ((p = strsep (&tokens, "&\n"))) {
+        char *var = strtok (p, "="),
+             *val = NULL;
+        if (var && (val = strtok (NULL, "=")))
+            printf ("<tr><td>%-8s:</td><td>%s</td></tr>\n", var, val);
+        else
+            fputs ("<empty field>\n", stderr);
+    }
+  free (query);
+
   printf("<tr><td>Message Body:</td><td> %s</td></tr>\n", fgets(str, 1000, stdin));
+
+
+  printf("</table>");
+
   
   // Print HTML footer
   printf("</body>");
