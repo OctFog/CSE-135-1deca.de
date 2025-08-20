@@ -5,15 +5,18 @@
 - Password: **pass135**
 
 ## Links
-- [Homepage](https://1deca.de)
-- [Member: Xiaogeng Xu](https://1deca.de/members/xiaogengxu.html)
-- [Collector](https://collector.1deca.de)
-- [Reporting](https://reporting.1deca.de)
-- [PHP](https://1deca.de/hello.php)
-- [robots.txt](https://www.1deca.de/robots.txt)
-- [404](https://www.1deca.de/404)
-- [GoAccess Report](https://1deca.de/report.html)
-- [favicon](https://www.1deca.de/images/favicon.ico)
+- [HW2 README](./doc/HW2-README)
+
+- HW1
+    - [Homepage](https://1deca.de)
+    - [Member: Xiaogeng Xu](https://1deca.de/members/xiaogengxu.html)
+    - [Collector](https://collector.1deca.de)
+    - [Reporting](https://reporting.1deca.de)
+    - [PHP](https://1deca.de/hello.php)
+    - [robots.txt](https://www.1deca.de/robots.txt)
+    - [404](https://www.1deca.de/404)
+    - [GoAccess Report](https://1deca.de/report.html)
+    - [favicon](https://www.1deca.de/images/favicon.ico)
 
 ## Details of Github Auto Deploy Setup
 ### Approach
