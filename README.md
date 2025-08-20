@@ -5,7 +5,7 @@
 - Password: **pass135**
 
 ## Links
-- [HW2 README](./doc/HW2-README)
+- [HW2 README](./doc/HW2-README.md)
 
 - HW1
     - [Homepage](https://1deca.de)
