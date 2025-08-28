@@ -1,0 +1,19 @@
+{
+  "name": "public_html",
+  "version": "1.0.0",
+  "description": "## Username/password Info for Logging into the Site - Username: **aiden** - Password: **pass135**",
+  "main": "server.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.16.3"
+  }
+}
