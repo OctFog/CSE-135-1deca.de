@@ -5,6 +5,9 @@
 - Password: **pass135**
 
 ## Links
+- HW3
+    - [Notes](./doc/HW3-NOTES.md)
+
 - [HW2 README](./doc/HW2-README.md)
 
 - HW1
