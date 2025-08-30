@@ -414,7 +414,7 @@ async function sendInitData() {
         // AnalyticsTracker.init();
         const url = 'https://1deca.de/json/userData';
         await sendDataToServer('static', url, getStaticData);
-        sendDataToServer('performance', url, getPerformanceData);
+        await sendDataToServer('performance', url, getPerformanceData);
     });
 }
 
