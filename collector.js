@@ -3,14 +3,15 @@ function collector() {
     sendInitData();
 }
 
-function getStaticData() {
+async function getStaticData() {
+    const imageAllowed = await checkUserImagesAllowed();
     const staticData = {
-        seesionID: getUserSession(),
+        sessionId: getUserSession(),
         userAgent: getUserAgentString(),
         language: getUserLanguage(),
         acceptsCookies: checkUserCookiesEnabled(),
         allowsJS: checkUserJSAllowed(),
-        allowsImages: checkUserImagesAllowed(),
+        allowsImages: imageAllowed,
         allowsCSS: checkCSSEnabled(),
         screenDiemensions: getUserScreenDimensions(),
         windowDimensions: getWindowDimensions(),
@@ -440,6 +441,7 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
         try {
             // Collect data (could be sync or async)
             const data = await dataCollector();
+                console.log('before send', data);
             
             // Attach type and session ID
             const payload = {
@@ -449,7 +451,7 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
                 data: data
             };
 
-            const checkResponse = await fetch(`${url}?sessionId=${sessionId}&type=${type}`);
+            const checkResponse = await fetch(`${url}?sessionId=${getUserSession()}&type=${type}`);
             const existing = await checkResponse.json();
 
             if (existing.length > 0) {
