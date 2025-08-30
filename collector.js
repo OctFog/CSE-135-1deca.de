@@ -148,7 +148,11 @@ function getUserScreenDimensions() {
     let width = window.screen.width;
     console.log(`User's screen dimensions: ${width} x ${height}`);
     console.log(`Width: ${width} CSS pixels \nHeight: ${height} CSS pixels `);
-    return width, height;
+    let dimension = {
+        width: width,
+        height: height,
+    }
+    return dimension;
 }
 
 function getWindowDimensions() {
@@ -160,7 +164,13 @@ function getWindowDimensions() {
     console.log(`Inner Width: ${innerWidth} CSS pixels \nInner Height: ${innerHeight} CSS pixels `);
     console.log(`User's outer window dimensions: ${outerWidth} x ${outerHeight}`);
     console.log(`Outer Width: ${outerWidth} CSS pixels \nOuter Height: ${outerHeight} CSS pixels `);
-    return innerWidth, innerHeight, outerWidth, outerHeight;
+    let dimension = {
+        innerWidth: innerWidth,
+        innerHeight: innerHeight,
+        outerWidth: outerWidth,
+        outerHeight, outerHeight
+    }
+    return dimension;
 }
 
 function getNetworkConnectionType() {
