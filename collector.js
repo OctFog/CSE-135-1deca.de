@@ -229,6 +229,8 @@ function getTotalLoadTime(startTime, endTime) {
 
 const AnalyticsTracker = (() => {
     // ----------------- Private Variables -----------------
+    let timestamp = Date.now();
+    const date = new Date(timestamp);
     const activityData = {
         sessionId: getUserSession(),
         mouseMoves: [],
@@ -237,7 +239,7 @@ const AnalyticsTracker = (() => {
         keyEvents: [],
         errors: [],
         idlePeriods: [],
-        pageEnter: Date.now(),
+        pageEnter: date.toLocaleString(),
         pageLeave: null,
         pageURL: window.location.href
     };
@@ -303,14 +305,18 @@ const AnalyticsTracker = (() => {
     // Mouse movement and clicks
     function trackMouseActivity() {
         document.addEventListener('mousemove', e => {
-            const move = { x: e.clientX, y: e.clientY, timestamp: Date.now() };
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
+            const move = { x: e.clientX, y: e.clientY, time: date.toLocaleString() };
             activityData.mouseMoves.push(move);
             console.log("Mouse moved:", move);
             resetIdleTimer();
         });
 
         document.addEventListener('click', e => {
-            const click = { x: e.clientX, y: e.clientY, button: e.button, timestamp: Date.now() };
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
+            const click = { x: e.clientX, y: e.clientY, button: e.button, time: date.toLocaleString() };
             activityData.clicks.push(click);
             console.log("Mouse clicked:", click);
             resetIdleTimer();
@@ -320,7 +326,9 @@ const AnalyticsTracker = (() => {
     // Scroll tracking
     function trackScrollActivity() {
         document.addEventListener('scroll', () => {
-            const scroll = { scrollX: window.scrollX, scrollY: window.scrollY, timestamp: Date.now() };
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
+            const scroll = { scrollX: window.scrollX, scrollY: window.scrollY, time: date.toLocaleString() };
             activityData.scrolls.push(scroll);
             console.log("Scrolled:", scroll);
             resetIdleTimer();
@@ -330,14 +338,18 @@ const AnalyticsTracker = (() => {
     // Keyboard tracking
     function trackKeyboardActivity() {
         document.addEventListener('keydown', e => {
-            const keyEvent = { type: 'keydown', key: e.key, timestamp: Date.now() };
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
+            const keyEvent = { type: 'keydown', key: e.key, time: date.toLocaleString() };
             activityData.keyEvents.push(keyEvent);
             console.log("Key down:", keyEvent);
             resetIdleTimer();
         });
 
         document.addEventListener('keyup', e => {
-            const keyEvent = { type: 'keyup', key: e.key, timestamp: Date.now() };
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
+            const keyEvent = { type: 'keyup', key: e.key, time: date.toLocaleString() };
             activityData.keyEvents.push(keyEvent);
             console.log("Key up:", keyEvent);
             resetIdleTimer();
@@ -347,12 +359,14 @@ const AnalyticsTracker = (() => {
     // Error tracking
     function trackErrors() {
         window.addEventListener('error', e => {
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
             const errorInfo = {
                 message: e.message,
                 filename: e.filename,
                 lineno: e.lineno,
                 colno: e.colno,
-                timestamp: Date.now()
+                time: date.toLocaleString()
             };
             activityData.errors.push(errorInfo);
             console.log("Error caught:", errorInfo);
@@ -362,7 +376,9 @@ const AnalyticsTracker = (() => {
     // Page enter/leave tracking
     function trackPageLifecycle() {
         window.addEventListener('beforeunload', () => {
-            activityData.pageLeave = Date.now();
+            let timestamp = Date.now();
+            let date = new Date(timestamp);
+            activityData.pageLeave = date.toLocaleString();
             console.log("Page unloading, final send:", { pageLeave: activityData.pageLeave });
             sendData(); // final send
         });
