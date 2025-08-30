@@ -418,31 +418,33 @@ async function sendInitData() {
     });
 }
 
-async function sendDataToServer(type, url, dataCollector) {
-    try {
-        // Collect data (could be sync or async)
-        const data = await dataCollector();
-        
-        // Attach type and session ID
-        const payload = {
-            type: type,               // e.g., 'static', 'performance', 'activity'
-            sessionId: getUserSession(),
-            timestamp: new Date().toISOString(),
-            data: data
-        };
+async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
+    setTimeout(async () => {
+        try {
+            // Collect data (could be sync or async)
+            const data = await dataCollector();
+            
+            // Attach type and session ID
+            const payload = {
+                type: type,               // e.g., 'static', 'performance', 'activity'
+                sessionId: getUserSession(),
+                timestamp: new Date().toISOString(),
+                data: data
+            };
 
-        // Send to server
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+            // Send to server
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-        const result = await response.json();
-        console.log(`${type} data sent successfully:`, result);
-    } catch (err) {
-        console.error(`Error sending ${type} data:`, err);
-    }
+            const result = await response.json();
+            console.log(`${type} data sent successfully:`, result);
+        } catch (err) {
+            console.error(`Error sending ${type} data:`, err);
+        }
+    }, delayMs);
 }
 
 collector();
