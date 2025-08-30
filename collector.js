@@ -402,10 +402,10 @@ const AnalyticsTracker = (() => {
 
 
 function getUserSession() {
-    let sessionId = sessionStorage.getItem('sessionId');
+    let sessionId = localStorage.getItem('sessionId');
     if (!sessionId) {
         sessionId = generateSessionId();
-        sessionStorage.setItem('sessionId', sessionId);
+        localStorage.setItem('sessionId', sessionId);
     }
     return sessionId;
 }
@@ -437,18 +437,30 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
                 data: data
             };
 
-            // Send to server
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+            const checkResponse = await fetch(`${url}?sessionId=${sessionId}&type=${type}`);
+            const existing = await checkResponse.json();
 
-            const result = await response.json();
-            console.log(`${type} data sent successfully:`, result);
+            if (existing.length > 0) {
+                // Update the first matching entry
+                await fetch(`${url}/${existing[0].id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                console.log(`${type} data updated successfully`);
+            } else {
+                // Create a new record
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                console.log(`${type} data sent successfully`);
+            }
         } catch (err) {
             console.error(`Error sending ${type} data:`, err);
         }
+
     }, delayMs);
 }
 
