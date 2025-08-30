@@ -411,7 +411,7 @@ function generateSessionId() {
 
 async function sendInitData() {
     window.addEventListener("load", async () => {
-        // AnalyticsTracker.init();
+        AnalyticsTracker.init();
         const url = 'https://1deca.de/json/userData';
         await sendDataToServer('static', url, getStaticData);
         await sendDataToServer('performance', url, getPerformanceData);
