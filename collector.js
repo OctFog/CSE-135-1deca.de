@@ -1,10 +1,5 @@
 function collector() {
     console.log("The collector is working...");
-    // window.addEventListener('load', () => {
-    //     initActivityTracking();
-    // });
-    // console.log(activityData)
-    // checkUserImagesAllowed();
     sendInitData();
 }
 
@@ -235,6 +230,7 @@ function getTotalLoadTime(startTime, endTime) {
 const AnalyticsTracker = (() => {
     // ----------------- Private Variables -----------------
     const activityData = {
+        sessionId: getUserSession(),
         mouseMoves: [],
         clicks: [],
         scrolls: [],
