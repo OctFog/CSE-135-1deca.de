@@ -8,6 +8,8 @@ var server = jsonServer.create();
 // Set default middlewares (logger, static, cors and no-cache)
 server.use(jsonServer.defaults());
 
+server.use(jsonServer.bodyParser);
+
 // Add custom routes
 // server.get('/custom', function (req, res) { res.json({ msg: 'hello' }) })
 
