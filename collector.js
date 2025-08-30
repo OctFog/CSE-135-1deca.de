@@ -248,10 +248,41 @@ const AnalyticsTracker = (() => {
 
     let lastActivity = Date.now();
     let idleTimeout;
-    let sendInterval = 5000; // send every 5 seconds
+    const sendInterval = 5000; // send every 5 seconds
     let intervalId;
-
+    const url = 'https://1deca.de/json/userData';
     // ----------------- Private Functions -----------------
+
+    // Generalized function to send any data type via fetch
+    function sendDataToServer(type, data) {
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, data })
+        }).catch(err => console.error(`Failed to send ${type} data:`, err));
+    }
+
+    // Clone and clear activityData
+    function prepareActivityData() {
+        const clone = {
+            ...activityData,
+            mouseMoves: [...activityData.mouseMoves],
+            clicks: [...activityData.clicks],
+            scrolls: [...activityData.scrolls],
+            keyEvents: [...activityData.keyEvents],
+            errors: [...activityData.errors],
+            idlePeriods: [...activityData.idlePeriods]
+        };
+
+        // Clear arrays
+        for (let key in activityData) {
+            if (Array.isArray(activityData[key])) {
+                activityData[key].length = 0;
+            }
+        }
+
+        return clone;
+    }
 
     // Idle tracking
     function resetIdleTimer() {
@@ -337,42 +368,15 @@ const AnalyticsTracker = (() => {
         window.addEventListener('beforeunload', () => {
             activityData.pageLeave = Date.now();
             console.log("Page unloading, final send:", { pageLeave: activityData.pageLeave });
-            sendData(true); // final send using sendBeacon
+            sendData(); // final send
         });
     }
 
     // ----------------- Send Data Function -----------------
-    function sendData(useBeacon = false) {
-        // Clone current activityData for sending
-        const dataToSend = {
-            ...activityData,
-            mouseMoves: [...activityData.mouseMoves],
-            clicks: [...activityData.clicks],
-            scrolls: [...activityData.scrolls],
-            keyEvents: [...activityData.keyEvents],
-            errors: [...activityData.errors],
-            idlePeriods: [...activityData.idlePeriods]
-        };
-
+    function sendData() {
+        const dataToSend = prepareActivityData();
         console.log("Sending activity data:", dataToSend);
-
-        if (useBeacon && navigator.sendBeacon) {
-            navigator.sendBeacon('/collector-endpoint', JSON.stringify({ type: 'activity', data: dataToSend }));
-        } else {
-            fetch('/collector-endpoint', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'activity', data: dataToSend })
-            }).catch(err => console.error("Failed to send activity data:", err));
-        }
-
-        // Clear the arrays after sending to send only new events next time
-        activityData.mouseMoves.length = 0;
-        activityData.clicks.length = 0;
-        activityData.scrolls.length = 0;
-        activityData.keyEvents.length = 0;
-        activityData.errors.length = 0;
-        activityData.idlePeriods.length = 0;
+        sendDataToServer('activity', dataToSend);
     }
 
     // ----------------- Public Init Function -----------------
@@ -386,15 +390,16 @@ const AnalyticsTracker = (() => {
         resetIdleTimer();
 
         // Auto-send activity data every sendInterval
-        intervalId = setInterval(() => sendData(), sendInterval);
+        intervalId = setInterval(sendData, sendInterval);
     }
 
     // Expose init and sendData
-    return { 
-        init, 
-        sendData // now you can call AnalyticsTracker.sendData() manually
+    return {
+        init,
+        sendData
     };
 })();
+
 
 function getUserSession() {
     let sessionId = sessionStorage.getItem('sessionId');
