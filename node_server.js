@@ -1,52 +1,147 @@
+// server.js
 const express = require("express");
-const bodyParser = require("body-parser");
+const { MongoClient, ObjectId } = require("mongodb");
 
 const app = express();
 const PORT = 3000;
 
-// Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
-// Mock data (pretend "static" table)
-let staticData = [
-  { id: 1, userAgent: "Mozilla/5.0", timestamp: "2025-09-01T12:00:00Z" },
-  { id: 2, userAgent: "Chrome/139.0", timestamp: "2025-09-01T12:10:00Z" },
-];
+// ----------------------
+// MongoDB Connection
+// ----------------------
+const uri = "mongodb://localhost:27017"; // default port 27017
+const client = new MongoClient(uri);
 
-// Routes
-// GET all
-app.get("/api/static", (req, res) => {
-  res.json(staticData);
+let db, staticCollection, performanceCollection, activityCollection;
+
+async function connectDB() {
+  await client.connect();
+  db = client.db("mydb"); // database name
+  staticCollection = db.collection("static");
+  performanceCollection = db.collection("performance");
+  activityCollection = db.collection("activity");
+  console.log("Connected to MongoDB");
+}
+
+connectDB();
+
+// ----------------------
+// HELPER: select collection by type
+// ----------------------
+function getCollectionByType(type) {
+  if (type === "static") return staticCollection;
+  if (type === "performance") return performanceCollection;
+  if (type === "activity") return activityCollection;
+  throw new Error("Unknown type: " + type);
+}
+
+// ----------------------
+// STATIC ROUTES
+// ----------------------
+app.get("/api/static", async (req, res) => {
+  const data = await staticCollection.find().toArray();
+  res.json(data);
 });
 
-// GET by ID
-app.get("/api/static/:id", (req, res) => {
-  const entry = staticData.find(e => e.id === parseInt(req.params.id));
-  entry ? res.json(entry) : res.status(404).json({ error: "Not found" });
+app.get("/api/static/:id", async (req, res) => {
+  const entry = await staticCollection.findOne({ _id: new ObjectId(req.params.id) });
+  if (!entry) return res.status(404).send("Not found");
+  res.json(entry);
 });
 
-// POST (create new entry)
-app.post("/api/static", (req, res) => {
-  const newEntry = { id: staticData.length + 1, ...req.body };
-  staticData.push(newEntry);
-  res.status(201).json(newEntry);
+app.post("/api/static", async (req, res) => {
+  const result = await staticCollection.insertOne(req.body);
+  res.status(201).json({ _id: result.insertedId, ...req.body });
 });
 
-// PUT (update by ID)
-app.put("/api/static/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const index = staticData.findIndex(e => e.id === id);
-  if (index === -1) return res.status(404).json({ error: "Not found" });
-  staticData[index] = { id, ...req.body };
-  res.json(staticData[index]);
+app.put("/api/static/:id", async (req, res) => {
+  const result = await staticCollection.findOneAndUpdate(
+    { _id: new ObjectId(req.params.id) },
+    { $set: req.body },
+    { returnDocument: "after" }
+  );
+  if (!result.value) return res.status(404).send("Not found");
+  res.json(result.value);
 });
 
-// DELETE
-app.delete("/api/static/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  staticData = staticData.filter(e => e.id !== id);
-  res.json({ message: `Entry ${id} deleted` });
+app.delete("/api/static/:id", async (req, res) => {
+  const result = await staticCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+  if (result.deletedCount === 0) return res.status(404).send("Not found");
+  res.status(204).send();
 });
 
-// Start server
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// ----------------------
+// PERFORMANCE ROUTES
+// ----------------------
+app.get("/api/performance", async (req, res) => {
+  const data = await performanceCollection.find().toArray();
+  res.json(data);
+});
+
+app.get("/api/performance/:id", async (req, res) => {
+  const entry = await performanceCollection.findOne({ _id: new ObjectId(req.params.id) });
+  if (!entry) return res.status(404).send("Not found");
+  res.json(entry);
+});
+
+app.post("/api/performance", async (req, res) => {
+  const result = await performanceCollection.insertOne(req.body);
+  res.status(201).json({ _id: result.insertedId, ...req.body });
+});
+
+app.put("/api/performance/:id", async (req, res) => {
+  const result = await performanceCollection.findOneAndUpdate(
+    { _id: new ObjectId(req.params.id) },
+    { $set: req.body },
+    { returnDocument: "after" }
+  );
+  if (!result.value) return res.status(404).send("Not found");
+  res.json(result.value);
+});
+
+app.delete("/api/performance/:id", async (req, res) => {
+  const result = await performanceCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+  if (result.deletedCount === 0) return res.status(404).send("Not found");
+  res.status(204).send();
+});
+
+// ----------------------
+// ACTIVITY ROUTES
+// ----------------------
+app.get("/api/activity", async (req, res) => {
+  const data = await activityCollection.find().toArray();
+  res.json(data);
+});
+
+app.get("/api/activity/:id", async (req, res) => {
+  const entry = await activityCollection.findOne({ _id: new ObjectId(req.params.id) });
+  if (!entry) return res.status(404).send("Not found");
+  res.json(entry);
+});
+
+app.post("/api/activity", async (req, res) => {
+  const result = await activityCollection.insertOne(req.body);
+  res.status(201).json({ _id: result.insertedId, ...req.body });
+});
+
+app.put("/api/activity/:id", async (req, res) => {
+  const result = await activityCollection.findOneAndUpdate(
+    { _id: new ObjectId(req.params.id) },
+    { $set: req.body },
+    { returnDocument: "after" }
+  );
+  if (!result.value) return res.status(404).send("Not found");
+  res.json(result.value);
+});
+
+app.delete("/api/activity/:id", async (req, res) => {
+  const result = await activityCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+  if (result.deletedCount === 0) return res.status(404).send("Not found");
+  res.status(204).send();
+});
+
+// ----------------------
+// START SERVER
+// ----------------------
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
