@@ -468,7 +468,7 @@ async function sendInitData() {
         // const url = 'https://1deca.de/json/userData';
         const staticUrl = 'https://1deca.de/api/static/';
         const performanceUrl = 'https://1deca.de/api/performance/';
-        // await sendDataToServer('static', staticUrl, getStaticData);
+        await sendDataToServer('static', staticUrl, getStaticData);
         await sendDataToServer('performance', performanceUrl, getPerformanceData);
     });
 }
