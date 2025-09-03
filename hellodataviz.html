@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/favicon.ico" />
+    <title>Data Visualization Demo</title>
+</head>
+<body>
+    <h1>Data Visualization Hello World</h1>
+
+    <div id="lineChart" class="chart-container"></div>
+    <div id="barChart" class="chart-container"></div>
+    <div id="pieChart" class="chart-container"></div>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+        // ====== 3-Series Line Chart ======
+        var lineChartConfig = {
+            type: 'line',
+            title: { text: "3-Series Line Chart" },
+            scaleX: { label: { text: "Time" } },
+            scaleY: { label: { text: "Value" } },
+            legend: {
+                draggable: true,
+            },
+            series: [
+                { values: [10, 15, 20, 25, 30], text: 'Series 1' },
+                { values: [5, 10, 15, 20, 25], text: 'Series 2' },
+                { values: [2, 8, 12, 18, 22], text: 'Series 3' }
+            ]
+        };
+        zingchart.render({ id: 'lineChart', data: lineChartConfig, height: 400, width: '100%' });
+
+        // ====== 2-Series Bar Chart ======
+        var barChartConfig = {
+            type: 'bar',
+            title: { text: "2-Series Bar Chart" },
+            scaleX: { labels: ['Q1', 'Q2', 'Q3', 'Q4'] },
+            scaleY: { label: { text: "Revenue" } },
+            legend: {
+                draggable: true,
+            },
+            series: [
+                { values: [20, 40, 30, 50], text: 'Series A' },
+                { values: [15, 35, 25, 45], text: 'Series B' }
+            ]
+        };
+        zingchart.render({ id: 'barChart', data: barChartConfig, height: 400, width: '100%' });
+
+        // ====== Pie Chart ======
+        var pieChartConfig = {
+            type: 'pie',
+            title: { text: "Fruit Distribution Pie Chart" },
+            legend: {
+                draggable: true,
+            },
+            series: [
+                { values: [35], text: 'Apples' },
+                { values: [25], text: 'Oranges' },
+                { values: [20], text: 'Bananas' },
+                { values: [20], text: 'Grapes' }
+            ]
+        };
+        zingchart.render({ id: 'pieChart', data: pieChartConfig, height: 400, width: '100%' });
+    </script>
+    
+</body>
+</html>
