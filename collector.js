@@ -260,7 +260,7 @@ const AnalyticsTracker = (() => {
     const sendInterval = 5000; // send every 5 seconds
     let intervalId;
     // const url = 'https://1deca.de/json/userData';
-    const url = 'https://1deca.de/activity';
+    const url = 'https://1deca.de/api/activity';
     // ----------------- Private Functions -----------------
 
     // Generalized function to send any data type via fetch
@@ -442,8 +442,8 @@ async function sendInitData() {
     window.addEventListener("load", async () => {
         AnalyticsTracker.init();
         // const url = 'https://1deca.de/json/userData';
-        const staticUrl = 'https://1deca.de/static/';
-        const performanceUrl = 'https://1deca.de/performance/';
+        const staticUrl = 'https://1deca.de/api/static/';
+        const performanceUrl = 'https://1deca.de/api/performance/';
         await sendDataToServer('static', staticUrl, getStaticData);
         await sendDataToServer('performance', url, getPerformanceData);
     });
