@@ -445,7 +445,7 @@ async function sendInitData() {
         const staticUrl = 'https://1deca.de/api/static/';
         const performanceUrl = 'https://1deca.de/api/performance/';
         await sendDataToServer('static', staticUrl, getStaticData);
-        await sendDataToServer('performance', url, getPerformanceData);
+        await sendDataToServer('performance', performanceUrl, getPerformanceData);
     });
 }
 
