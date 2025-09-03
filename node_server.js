@@ -24,12 +24,11 @@ async function connectDB() {
   await client.connect();
   console.log("MongoDB connected!");
 
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME);
   staticCollection = db.collection("static");
   activityCollection = db.collection("activity");
   performanceCollection = db.collection("performance");
-
-  console.log("Connected to MongoDB");
+  return db;
 }
 
 
