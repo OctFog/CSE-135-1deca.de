@@ -1,4 +1,7 @@
 // server.js
+import dotenv from "dotenv";
+dotenv.config();
+
 const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 
@@ -10,10 +13,16 @@ app.use(express.json());
 // ----------------------
 // MongoDB Connection
 // ----------------------
-const uri = "mongodb://localhost:27017"; // default port 27017
-const client = new MongoClient(uri);
+// const uri = "mongodb://localhost:27017"; // default port 27017
+// const client = new MongoClient(uri);
 
-let db, staticCollection, performanceCollection, activityCollection;
+const client = new MongoClient(process.env.MONGODB_URI);
+await client.connect();
+const db = client.db(process.env.DB_NAME);
+
+// let db, 
+
+let staticCollection, performanceCollection, activityCollection;
 
 async function connectDB() {
   await client.connect();
