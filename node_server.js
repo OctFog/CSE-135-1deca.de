@@ -4,7 +4,6 @@ dotenv.config();
 
 const { MongoClient } = require("mongodb");
 const express = require("express");
-console.log("Mongo URI:", process.env.MONGODB_URI);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +19,7 @@ app.use(express.json());
 let staticCollection, activityCollection, performanceCollection;
 
 async function connectDB() {
-  const client = new MongoClient(process.env.MONGO_URI);
+  const client = new MongoClient(process.env.MONGODB_URI);
   await client.connect();
   console.log("MongoDB connected!");
 
