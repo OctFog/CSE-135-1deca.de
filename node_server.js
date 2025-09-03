@@ -23,7 +23,7 @@ async function connectDB() {
   await client.connect();
   console.log("MongoDB connected!");
 
-  const db = client.db("analyticsDB");
+  const db = client.db();
   staticCollection = db.collection("static");
   activityCollection = db.collection("activity");
   performanceCollection = db.collection("performance");
