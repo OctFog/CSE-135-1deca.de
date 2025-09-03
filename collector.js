@@ -192,30 +192,54 @@ function getNetworkConnectionType() {
     // saveData: false        → User has not enabled "Data Saver" mode
 }
 
+// function getTimingObj() {
+//     return new Promise((resolve) => {
+//         window.addEventListener("load", () => {
+//             setTimeout(() => {
+//                 const [nav] = performance.getEntriesByType("navigation");
+//                 const perfTiming = performance.timing;
+
+//                 // Store everything in one object
+//                 const timingData = {
+//                     // New API
+//                     // newStartTime: nav.startTime,
+//                     // newDomComplete: nav.domComplete,
+//                     timingNewAPI: nav, 
+
+//                     // Old API
+//                     // oldDomLoading: perfTiming.domLoading,
+//                     // oldDomComplete: perfTiming.domComplete,
+//                     // navigationStart: perfTiming.navigationStart
+//                     timingOldAPI: perfTiming
+//                 };
+
+//                 resolve(timingData);
+//             }, 0);
+//         });
+//     });
+// }
+
 function getTimingObj() {
     return new Promise((resolve) => {
-        window.addEventListener("load", () => {
-            setTimeout(() => {
-                const [nav] = performance.getEntriesByType("navigation");
-                const perfTiming = performance.timing;
+        function collectData() {
+            const [nav] = performance.getEntriesByType("navigation");
+            const perfTiming = performance.timing;
 
-                // Store everything in one object
-                const timingData = {
-                    // New API
-                    // newStartTime: nav.startTime,
-                    // newDomComplete: nav.domComplete,
-                    timingNewAPI: nav, 
+            const timingData = {
+                timingNewAPI: nav,
+                timingOldAPI: perfTiming
+            };
 
-                    // Old API
-                    // oldDomLoading: perfTiming.domLoading,
-                    // oldDomComplete: perfTiming.domComplete,
-                    // navigationStart: perfTiming.navigationStart
-                    timingOldAPI: perfTiming
-                };
+            resolve(timingData);
+        }
 
-                resolve(timingData);
-            }, 0);
-        });
+        if (document.readyState === "complete") {
+            // Page already loaded, run immediately
+            setTimeout(collectData, 0);
+        } else {
+            // Wait for load event
+            window.addEventListener("load", () => setTimeout(collectData, 0));
+        }
     });
 }
 
@@ -444,7 +468,7 @@ async function sendInitData() {
         // const url = 'https://1deca.de/json/userData';
         const staticUrl = 'https://1deca.de/api/static/';
         const performanceUrl = 'https://1deca.de/api/performance/';
-        await sendDataToServer('static', staticUrl, getStaticData);
+        // await sendDataToServer('static', staticUrl, getStaticData);
         await sendDataToServer('performance', performanceUrl, getPerformanceData);
     });
 }
@@ -457,6 +481,7 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
                 console.log('before send', data);
             
             // Attach type and session ID
+            console.log('type',  type);
             const payload = {
                 type: type,               // e.g., 'static', 'performance', 'activity'
                 sessionId: getUserSession(),
