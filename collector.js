@@ -489,7 +489,7 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
                 data: data
             };
 
-            const checkResponse = await fetch(`${url}?sessionId=${getUserSession()}&type=${type}`);
+            const checkResponse = await fetch(`${url}/${sessionId}`);
             const existing = await checkResponse.json();
 
             if (existing.length > 0) {
