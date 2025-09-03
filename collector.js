@@ -484,23 +484,20 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
             console.log('type',  type);
             const payload = {
                 type: type,               // e.g., 'static', 'performance', 'activity'
-                sessionId: getUserSession(),
+                id: getUserSession(),
                 timestamp: new Date().toISOString(),
                 data: data
             };
 
-            const checkResponse = await fetch(`${url}?sessionId=${getUserSession()}&type=${type}`);
-            const existing = await checkResponse.json();
+            const updateResponse = await fetch(`${url}/${getUserSession()}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-            if (existing.length > 0) {
-                // Update the first matching entry
-                await fetch(`${url}/${existing[0].id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            if (updateResponse.ok) {
                 console.log(`${type} data updated successfully`);
-            } else {
+            } else if (updateResponse.status === 404) {
                 // Create a new record
                 await fetch(url, {
                     method: 'POST',
