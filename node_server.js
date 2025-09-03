@@ -53,12 +53,6 @@ connectDB()
         res.json(data);
     });
 
-    // app.get("/api/static/:id", async (req, res) => {
-    //     const entry = await staticCollection.findOne({ _id: new ObjectId(req.params.id) });
-    //     if (!entry) return res.status(404).send("Not found");
-    //     res.json(entry);
-    // });
-
     app.get("/api/static/:id", async (req, res) => {
         const id = req.params.id;
 
@@ -82,19 +76,35 @@ connectDB()
     });
 
     app.put("/api/static/:id", async (req, res) => {
-        const result = await staticCollection.findOneAndUpdate(
-            { _id: new ObjectId(req.params.id) },
-            { $set: req.body },
-            { returnDocument: "after" }
-        );
-        if (!result.value) return res.status(404).send("Not found");
-        res.json(result.value);
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const result = await staticCollection.findOneAndUpdate(
+                { _id: new ObjectId(id) },
+                { $set: req.body },
+                { returnDocument: "after" }
+            );
+            if (!result.value) return res.status(404).send("Not found");
+            res.json(result.value);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     app.delete("/api/static/:id", async (req, res) => {
-        const result = await staticCollection.deleteOne({ _id: new ObjectId(req.params.id) });
-        if (result.deletedCount === 0) return res.status(404).send("Not found");
-        res.status(204).send();
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const result = await staticCollection.deleteOne({ _id: new ObjectId(id) });
+            if (result.deletedCount === 0) return res.status(404).send("Not found");
+            res.status(204).send();
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     // ----------------------
@@ -105,31 +115,55 @@ connectDB()
         res.json(data);
     });
 
-    app.get("/api/performance/:id", async (req, res) => {
-        const entry = await performanceCollection.findOne({ _id: new ObjectId(req.params.id) });
-        if (!entry) return res.status(404).send("Not found");
-        res.json(entry);
-    });
-
     app.post("/api/performance", async (req, res) => {
         const result = await performanceCollection.insertOne(req.body);
         res.status(201).json({ _id: result.insertedId, ...req.body });
     });
 
+    app.get("/api/performance/:id", async (req, res) => {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const entry = await performanceCollection.findOne({ _id: new ObjectId(id) });
+            if (!entry) return res.status(404).send("Not found");
+            res.json(entry);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
+    });
+
     app.put("/api/performance/:id", async (req, res) => {
-        const result = await performanceCollection.findOneAndUpdate(
-            { _id: new ObjectId(req.params.id) },
-            { $set: req.body },
-            { returnDocument: "after" }
-        );
-        if (!result.value) return res.status(404).send("Not found");
-        res.json(result.value);
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const result = await performanceCollection.findOneAndUpdate(
+                { _id: new ObjectId(id) },
+                { $set: req.body },
+                { returnDocument: "after" }
+            );
+            if (!result.value) return res.status(404).send("Not found");
+            res.json(result.value);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     app.delete("/api/performance/:id", async (req, res) => {
-        const result = await performanceCollection.deleteOne({ _id: new ObjectId(req.params.id) });
-        if (result.deletedCount === 0) return res.status(404).send("Not found");
-        res.status(204).send();
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const result = await performanceCollection.deleteOne({ _id: new ObjectId(id) });
+            if (result.deletedCount === 0) return res.status(404).send("Not found");
+            res.status(204).send();
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     // ----------------------
@@ -140,31 +174,55 @@ connectDB()
         res.json(data);
     });
 
-    app.get("/api/activity/:id", async (req, res) => {
-        const entry = await activityCollection.findOne({ _id: new ObjectId(req.params.id) });
-        if (!entry) return res.status(404).send("Not found");
-        res.json(entry);
-    });
-
     app.post("/api/activity", async (req, res) => {
         const result = await activityCollection.insertOne(req.body);
         res.status(201).json({ _id: result.insertedId, ...req.body });
     });
 
+    app.get("/api/activity/:id", async (req, res) => {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const entry = await activityCollection.findOne({ _id: new ObjectId(id) });
+            if (!entry) return res.status(404).send("Not found");
+            res.json(entry);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
+    });
+
     app.put("/api/activity/:id", async (req, res) => {
-    const result = await activityCollection.findOneAndUpdate(
-        { _id: new ObjectId(req.params.id) },
-        { $set: req.body },
-        { returnDocument: "after" }
-    );
-    if (!result.value) return res.status(404).send("Not found");
-        res.json(result.value);
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const result = await activityCollection.findOneAndUpdate(
+                { _id: new ObjectId(id) },
+                { $set: req.body },
+                { returnDocument: "after" }
+            );
+            if (!result.value) return res.status(404).send("Not found");
+            res.json(result.value);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     app.delete("/api/activity/:id", async (req, res) => {
-        const result = await activityCollection.deleteOne({ _id: new ObjectId(req.params.id) });
-        if (result.deletedCount === 0) return res.status(404).send("Not found");
-        res.status(204).send();
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+
+        try {
+            const result = await activityCollection.deleteOne({ _id: new ObjectId(id) });
+            if (result.deletedCount === 0) return res.status(404).send("Not found");
+            res.status(204).send();
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     // ----------------------
