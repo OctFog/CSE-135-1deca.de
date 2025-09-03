@@ -476,83 +476,44 @@ async function sendInitData() {
 async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
     setTimeout(async () => {
         try {
+            // Collect data (could be sync or async)
             const data = await dataCollector();
-            console.log('before send', data);
-
-            const sessionId = getUserSession();
+                console.log('before send', data);
+            
+            // Attach type and session ID
+            console.log('type',  type);
             const payload = {
-                type: type,
+                type: type,               // e.g., 'static', 'performance', 'activity'
+                sessionId: getUserSession(),
                 timestamp: new Date().toISOString(),
                 data: data
             };
 
-            // Try updating first (PUT)
-            const res = await fetch(`${url}/${sessionId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+            const checkResponse = await fetch(`${url}?sessionId=${getUserSession()}&type=${type}`);
+            const existing = await checkResponse.json();
 
-            if (res.ok) {
-                console.log(`${type} data sent/updated successfully`);
+            if (existing.length > 0) {
+                // Update the first matching entry
+                await fetch(`${url}/${existing[0].id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                console.log(`${type} data updated successfully`);
             } else {
-                // If PUT fails (e.g., 404), create new (POST)
+                // Create a new record
                 await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionId, ...payload })
+                    body: JSON.stringify(payload)
                 });
-                console.log(`${type} data created successfully`);
+                console.log(`${type} data sent successfully`);
             }
-
         } catch (err) {
             console.error(`Error sending ${type} data:`, err);
         }
+
     }, delayMs);
 }
-
-
-// async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
-//     setTimeout(async () => {
-//         try {
-//             // Collect data (could be sync or async)
-//             const data = await dataCollector();
-//                 console.log('before send', data);
-            
-//             // Attach type and session ID
-//             console.log('type',  type);
-//             const payload = {
-//                 type: type,               // e.g., 'static', 'performance', 'activity'
-//                 sessionId: getUserSession(),
-//                 timestamp: new Date().toISOString(),
-//                 data: data
-//             };
-
-//             const checkResponse = await fetch(`${url}?sessionId=${getUserSession()}&type=${type}`);
-//             const existing = await checkResponse.json();
-
-//             if (existing.length > 0) {
-//                 // Update the first matching entry
-//                 await fetch(`${url}/${existing[0].id}`, {
-//                     method: 'PUT',
-//                     headers: { 'Content-Type': 'application/json' },
-//                     body: JSON.stringify(payload)
-//                 });
-//                 console.log(`${type} data updated successfully`);
-//             } else {
-//                 // Create a new record
-//                 await fetch(url, {
-//                     method: 'POST',
-//                     headers: { 'Content-Type': 'application/json' },
-//                     body: JSON.stringify(payload)
-//                 });
-//                 console.log(`${type} data sent successfully`);
-//             }
-//         } catch (err) {
-//             console.error(`Error sending ${type} data:`, err);
-//         }
-
-//     }, delayMs);
-// }
 
 collector();
