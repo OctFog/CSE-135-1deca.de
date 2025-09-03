@@ -489,25 +489,22 @@ async function sendDataToServer(type, url, dataCollector, delayMs = 10000) {
                 data: data
             };
 
-            const checkResponse = await fetch(`${url}/${getUserSession()}`);
-            const existing = await checkResponse.json();
+            const checkResponse = await fetch(url); // fetch all static
+            const allData = await checkResponse.json();
+            const existing = allData.filter(item => item.sessionId === getUserSession());
 
             if (existing.length > 0) {
-                // Update the first matching entry
-                await fetch(`${url}/${existing[0].id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                console.log(`${type} data updated successfully`);
+            await fetch(`${url}/${existing[0]._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
             } else {
-                // Create a new record
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                console.log(`${type} data sent successfully`);
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
             }
         } catch (err) {
             console.error(`Error sending ${type} data:`, err);
