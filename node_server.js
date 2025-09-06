@@ -52,7 +52,21 @@ connectDB()
     app.get("/api/static", async (req, res) => {
         try {
             const data = await staticCollection.find({}, { projection: { _id: 0 } }).toArray();
-            res.json(data);
+            const rData = data.map(doc => ({
+                "ID": doc.id,
+                "Session": doc.sessionId,
+                "Time": doc.timestamp,
+                "User Agent": doc.userAgent,
+                "Language": doc.language,
+                "Accpets Cookies": doc.acceptsCookies,
+                "Allow JavaScript": doc.allowsJS,
+                "Allow Images": doc.allowsImages,
+                "Allow CSS": doc.allowsCSS,                                
+                "Screen Dimensions": { "width": doc.screenDimensions.width, "height": doc.screenDimensions.height },
+                "Window Dimensions": { "innerWidth": doc.windowDimensions.innerWidth, "innerHeight": doc.windowDimensions.innerHeight, "outerWidth":  doc.windowDimensions.outerWidth, "outerHeight":  doc.windowDimensions.outerHeight },
+                "Network Connection Type": networkConnectionType
+            }))
+            res.json(rData);
         } catch (err) {
             console.error(err);
             res.status(500).send("Server error");
