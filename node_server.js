@@ -4,11 +4,18 @@ dotenv.config();
 
 const { MongoClient, ObjectId } = require("mongodb");
 const express = require("express");
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.use(cors({
+    origin: 'https://reporting.1deca.de',
+    methods: ['GET','POST','OPTIONS','DELETE','PUT'],
+    allowedHeaders: ['Content-Type','Authorization']
+}));
 
 // ----------------------
 // MongoDB Connection
