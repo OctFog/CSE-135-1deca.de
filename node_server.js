@@ -167,9 +167,53 @@ connectDB()
     // PERFORMANCE ROUTES
     // ----------------------
     app.get("/api/performance", async (req, res) => {
-        const data = await performanceCollection.find().toArray();
-        res.json(data);
+        try {
+            const docs = await performanceCollection.find({}, { projection: { _id: 0 } }).toArray();
+
+            const rData = docs.map(doc => {
+                const newAPI = doc.data.timingObj?.timingNewAPI ?? {};
+                const oldAPI = doc.data.timingObj?.timingOldAPI ?? {};
+
+                return {
+                    "ID": doc.id,
+                    "Session": doc.sessionId,
+                    "Time": doc.timestamp,
+                    "Timing Page Start Load": doc.data.timingPageStartLoad,
+                    "Timing Page End Load": doc.data.timingPageEndLoad,
+                    "Total Load Time": doc.data.totalLoadTime,
+
+                    // Split New API fields
+                    "New API Name": newAPI.name,
+                    "New API Entry Type": newAPI.entryType,
+                    "New API Start Time": newAPI.startTime,
+                    "New API Duration": newAPI.duration,
+                    "New API Initiator Type": newAPI.initiatorType,
+                    "New API Response Status": newAPI.responseStatus,
+                    "New API DOM Interactive": newAPI.domInteractive,
+                    "New API DOM Complete": newAPI.domComplete,
+                    "New API Load Event Start": newAPI.loadEventStart,
+                    "New API Load Event End": newAPI.loadEventEnd,
+
+                    // Split Old API fields
+                    "Old API Connect Start": oldAPI.connectStart,
+                    "Old API Secure Connection Start": oldAPI.secureConnectionStart,
+                    "Old API Request Start": oldAPI.requestStart,
+                    "Old API Response Start": oldAPI.responseStart,
+                    "Old API Response End": oldAPI.responseEnd,
+                    "Old API DOM Loading": oldAPI.domLoading,
+                    "Old API DOM Content Loaded End": oldAPI.domContentLoadedEventEnd,
+                    "Old API DOM Complete": oldAPI.domComplete,
+                    "Old API Load Event End": oldAPI.loadEventEnd
+                };
+            });
+
+            res.json(rData);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
+
 
     app.post("/api/performance", async (req, res) => {
         try {
@@ -185,11 +229,48 @@ connectDB()
 
     app.get("/api/performance/:id", async (req, res) => {
         const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(400).send("Invalid ID format");
 
         try {
-            const entry = await performanceCollection.findOne({ id: id });
-            if (!entry) return res.status(404).send("Not found");
-            res.json(entry);
+            const doc = await performanceCollection.findOne({ id: id }, { projection: { _id: 0 } });
+            if (!doc) return res.status(404).send("Not found");
+
+            const newAPI = doc.data.timingObj?.timingNewAPI ?? {};
+            const oldAPI = doc.data.timingObj?.timingOldAPI ?? {};
+
+            const rData = {
+                "ID": doc.id,
+                "Session": doc.sessionId,
+                "Time": doc.timestamp,
+                "Timing Page Start Load": doc.data.timingPageStartLoad,
+                "Timing Page End Load": doc.data.timingPageEndLoad,
+                "Total Load Time": doc.data.totalLoadTime,
+
+                // Split New API fields
+                "New API Name": newAPI.name,
+                "New API Entry Type": newAPI.entryType,
+                "New API Start Time": newAPI.startTime,
+                "New API Duration": newAPI.duration,
+                "New API Initiator Type": newAPI.initiatorType,
+                "New API Response Status": newAPI.responseStatus,
+                "New API DOM Interactive": newAPI.domInteractive,
+                "New API DOM Complete": newAPI.domComplete,
+                "New API Load Event Start": newAPI.loadEventStart,
+                "New API Load Event End": newAPI.loadEventEnd,
+
+                // Split Old API fields
+                "Old API Connect Start": oldAPI.connectStart,
+                "Old API Secure Connection Start": oldAPI.secureConnectionStart,
+                "Old API Request Start": oldAPI.requestStart,
+                "Old API Response Start": oldAPI.responseStart,
+                "Old API Response End": oldAPI.responseEnd,
+                "Old API DOM Loading": oldAPI.domLoading,
+                "Old API DOM Content Loaded End": oldAPI.domContentLoadedEventEnd,
+                "Old API DOM Complete": oldAPI.domComplete,
+                "Old API Load Event End": oldAPI.loadEventEnd
+            };
+
+            res.json(rData);
         } catch (err) {
             console.error(err);
             res.status(500).send("Server error");
