@@ -50,19 +50,23 @@ connectDB()
     // STATIC ROUTES
     // ----------------------
     app.get("/api/static", async (req, res) => {
-        const data = await staticCollection.find().toArray();
-        res.json(data);
+        try {
+            const data = await staticCollection.find({}, { projection: { _id: 0 } }).toArray();
+            res.json(data);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
     });
 
     app.get("/api/static/:id", async (req, res) => {
-        const id = req.params.id;
-
-        if (!ObjectId.isValid(id)) {
+        const id = parseInt(req.params.id, 10); // convert string → number
+        if (isNaN(id)) {
             return res.status(400).send("Invalid ID format");
         }
 
         try {
-            const entry = await staticCollection.findOne({ _id: new ObjectId(id) });
+            const entry = await staticCollection.findOne({ id: id });
             if (!entry) return res.status(404).send("Not found");
             res.json(entry);
         } catch (err) {
@@ -240,15 +244,15 @@ connectDB()
             { upsert: true, returnDocument: "after" }
         );
 
-        // Make sure it always has a value
+        // If no value was returned (newly upserted doc), start at 1
         if (!result.value) {
-            // initialize manually if not found
-            await countersCollection.insertOne({ _id: name, seq: 1 });
-            return 1;
+            const doc = await countersCollection.findOne({ _id: name });
+            return doc.seq;
         }
 
         return result.value.seq;
     }
+
 
 
 
