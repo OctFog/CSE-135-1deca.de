@@ -52,28 +52,29 @@ connectDB()
     app.get("/api/static", async (req, res) => {
         try {
             const data = await staticCollection.find({}, { projection: { _id: 0 } }).toArray();
-            const rData = data.map(doc => ({
+            const rData = docs.map(doc => ({
                 "ID": doc.id,
-                "Session": doc.sessionId,
+                "Session": doc.data.sessionId,
                 "Time": doc.timestamp,
-                "User Agent": doc.userAgent,
-                "Language": doc.language,
-                "Accpets Cookies": doc.acceptsCookies,
-                "Allow JavaScript": doc.allowsJS,
-                "Allow Images": doc.allowsImages,
-                "Allow CSS": doc.allowsCSS,                                
-                "Screen Dimensions": { 
-                    width: doc.screenDimensions?.width ?? 0,
-                    height: doc.screenDimensions?.height ?? 0 
+                "User Agent": doc.data.userAgent,
+                "Language": doc.data.language,
+                "Accepts Cookies": doc.data.acceptsCookies,
+                "Allow JavaScript": doc.data.allowsJS,
+                "Allow Images": doc.data.allowsImages,
+                "Allow CSS": doc.data.allowsCSS,
+                "Screen Dimensions": {
+                    width: doc.data.screenDiemensions?.width ?? 0,
+                    height: doc.data.screenDiemensions?.height ?? 0
                 },
                 "Window Dimensions": {
-                    innerWidth: doc.windowDimensions?.innerWidth ?? 0,
-                    innerHeight: doc.windowDimensions?.innerHeight ?? 0,
-                    outerWidth: doc.windowDimensions?.outerWidth ?? 0,
-                    outerHeight: doc.windowDimensions?.outerHeight ?? 0
+                    innerWidth: doc.data.windowDimensions?.innerWidth ?? 0,
+                    innerHeight: doc.data.windowDimensions?.innerHeight ?? 0,
+                    outerWidth: doc.data.windowDimensions?.outerWidth ?? 0,
+                    outerHeight: doc.data.windowDimensions?.outerHeight ?? 0
                 },
-                "Network Connection Type": doc.networkConnectionType
-            }))
+                "Network Connection Type": doc.data.networkConnectionType
+            }));
+
             res.json(rData);
         } catch (err) {
             console.error(err);
