@@ -62,9 +62,17 @@ connectDB()
                 "Allow JavaScript": doc.allowsJS,
                 "Allow Images": doc.allowsImages,
                 "Allow CSS": doc.allowsCSS,                                
-                "Screen Dimensions": { "width": doc.screenDimensions.width, "height": doc.screenDimensions.height },
-                "Window Dimensions": { "innerWidth": doc.windowDimensions.innerWidth, "innerHeight": doc.windowDimensions.innerHeight, "outerWidth":  doc.windowDimensions.outerWidth, "outerHeight":  doc.windowDimensions.outerHeight },
-                "Network Connection Type": networkConnectionType
+                "Screen Dimensions": { 
+                    width: doc.screenDimensions?.width ?? 0,
+                    height: doc.screenDimensions?.height ?? 0 
+                },
+                "Window Dimensions": {
+                    innerWidth: doc.windowDimensions?.innerWidth ?? 0,
+                    innerHeight: doc.windowDimensions?.innerHeight ?? 0,
+                    outerWidth: doc.windowDimensions?.outerWidth ?? 0,
+                    outerHeight: doc.windowDimensions?.outerHeight ?? 0
+                },
+                "Network Connection Type": doc.networkConnectionType
             }))
             res.json(rData);
         } catch (err) {
