@@ -27,6 +27,7 @@ async function connectDB() {
   staticCollection = db.collection("static");
   activityCollection = db.collection("activity");
   performanceCollection = db.collection("performance");
+  countersCollection = db.collection("counters");
   return db;
 }
 
@@ -71,17 +72,24 @@ connectDB()
     });
 
     app.post("/api/static", async (req, res) => {
-        const result = await staticCollection.insertOne(req.body);
-        res.status(201).json({ _id: result.insertedId, ...req.body });
+        try {
+            const newId = await getNextSequence("static");
+            const doc = { ...req.body, id: newId };
+            const result = await staticCollection.insertOne(doc);
+            res.status(201).json(doc);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        }
+        
     });
 
     app.put("/api/static/:id", async (req, res) => {
-        const id = req.params.id;
-        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+        const id = parseInt(req.params.id, 10);
 
         try {
             const result = await staticCollection.findOneAndUpdate(
-                { _id: new ObjectId(id) },
+                { id: id },
                 { $set: req.body },
                 { returnDocument: "after" }
             );
@@ -94,11 +102,10 @@ connectDB()
     });
 
     app.delete("/api/static/:id", async (req, res) => {
-        const id = req.params.id;
-        if (!ObjectId.isValid(id)) return res.status(400).send("Invalid ID");
+        const id = parseInt(req.params.id, 10);
 
         try {
-            const result = await staticCollection.deleteOne({ _id: new ObjectId(id) });
+            const result = await staticCollection.deleteOne({ id: id });
             if (result.deletedCount === 0) return res.status(404).send("Not found");
             res.status(204).send();
         } catch (err) {
@@ -224,6 +231,17 @@ connectDB()
             res.status(500).send("Server error");
         }
     });
+
+    // Helper
+    async function getNextSequence(name) {
+        const result = await countersCollection.findOneAndUpdate(
+            { _id: name },
+            { $inc: { seq: 1 } },
+            { upsert: true, returnDocument: "after" }
+        );
+        return result.value.seq;
+    }
+
 
     // ----------------------
     // START SERVER
