@@ -315,30 +315,33 @@ connectDB()
             const docs = await activityCollection.find({}, { projection: { _id: 0 } }).toArray();
 
             const rData = docs.map(doc => {
-                const mouseMovements = doc.data.mouseMoves ?? [];
+                const mouseMoves = doc.data.mouseMoves ?? [];
                 const clicks = doc.data.clicks ?? [];
                 const scrolls = doc.data.scrolls ?? [];
+                const keyEvents = doc.data.keyEvents ?? [];
+                const errors = doc.data.errors ?? [];
+                const idlePeriods = doc.data.idlePeriods ?? [];
 
                 return {
                     "ID": doc.id,
                     "Session": doc.data.sessionId,
                     "Time": doc.timestamp,
-                    "Mouse X": mouseMovements.map(m => m.x),
-                    "Mouse Y": mouseMovements.map(m => m.y),
-                    "Mouse Time": mouseMovements.map(m => m.time),
-                    "Click X": clicks.map(c => c.x),
-                    "Click Y": clicks.map(c => c.y),
-                    "Click Button": clicks.map(c => c.button),
-                    "Click Time": clicks.map(c => c.time),
-                    "Scroll X": scrolls.map(s => s.scrollX),
-                    "Scroll Y": scrolls.map(s => s.scrollY),
-                    "Scroll Time": scrolls.map(s => s.time),
-                    "Key Events": doc.data.keyEvents ?? [],
-                    "Errors": doc.data.errors ?? [],
-                    "Idle Periods": doc.data.idlePeriods ?? [],
+                    "Mouse": mouseMoves.length > 0 ? "moved" : "none",
+                    "Mouse Count": mouseMoves.length,
+                    "Click": clicks.length > 0 ? "clicked" : "none",
+                    "Click Count": clicks.length,
+                    "Scroll": scrolls.length > 0 ? "scrolled" : "none",
+                    "Scroll Count": scrolls.length,
+                    "Key Events": keyEvents.length > 0 ? "some" : "none",
+                    "Key Events Count": keyEvents.length,
+                    "Errors": errors.length > 0 ? "some" : "none",
+                    "Errors Count": errors.length,
+                    "Idle Periods": idlePeriods.length > 0 ? "some" : "none",
+                    "Idle Periods Count": idlePeriods.length,
                     "Page Enter": doc.data.pageEnter,
                     "Page Leave": doc.data.pageLeave,
-                    "Page URL": doc.data.pageURL
+                    "Page URL": doc.data.pageURL,
+                    "Note": "For full details, check the database directly."
                 };
             });
 
