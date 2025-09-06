@@ -239,8 +239,17 @@ connectDB()
             { $inc: { seq: 1 } },
             { upsert: true, returnDocument: "after" }
         );
+
+        // Make sure it always has a value
+        if (!result.value) {
+            // initialize manually if not found
+            await countersCollection.insertOne({ _id: name, seq: 1 });
+            return 1;
+        }
+
         return result.value.seq;
     }
+
 
 
     // ----------------------
