@@ -51,7 +51,7 @@ connectDB()
     // ----------------------
     app.get("/api/static", async (req, res) => {
         try {
-            const data = await staticCollection.find({}, { projection: { _id: 0 } }).toArray();
+            const docs = await staticCollection.find({}, { projection: { _id: 0 } }).toArray();
             const rData = docs.map(doc => ({
                 "ID": doc.id,
                 "Session": doc.data.sessionId,
