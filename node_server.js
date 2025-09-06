@@ -310,33 +310,40 @@ connectDB()
     // ----------------------
     // ACTIVITY ROUTES
     // ----------------------
-    app.get("/api/activity/:id", async (req, res) => {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) return res.status(400).send("Invalid ID format");
-
+    app.get("/api/activity", async (req, res) => {
         try {
-            const doc = await activityCollection.findOne({ id: id }, { projection: { _id: 0 } });
-            if (!doc) return res.status(404).send("Not found");
+            const docs = await activityCollection.find({}, { projection: { _id: 0 } }).toArray();
 
-            const mouseMoved = (doc.data.mouseMoves ?? []).length > 0 ? "moved" : "none";
-            const clicked = (doc.data.clicks ?? []).length > 0 ? "clicked" : "none";
-            const scrolled = (doc.data.scrolls ?? []).length > 0 ? "scrolled" : "none";
+            const rData = docs.map(doc => {
+                const mouseMoves = doc.data.mouseMoves ?? [];
+                const clicks = doc.data.clicks ?? [];
+                const scrolls = doc.data.scrolls ?? [];
+                const keyEvents = doc.data.keyEvents ?? [];
+                const errors = doc.data.errors ?? [];
+                const idlePeriods = doc.data.idlePeriods ?? [];
 
-            const rData = {
-                "ID": doc.id,
-                "Session": doc.data.sessionId,
-                "Time": doc.timestamp,
-                "Mouse": mouseMoved,
-                "Click": clicked,
-                "Scroll": scrolled,
-                "Key Events": (doc.data.keyEvents ?? []).length > 0 ? "some" : "none",
-                "Errors": (doc.data.errors ?? []).length > 0 ? "some" : "none",
-                "Idle Periods": (doc.data.idlePeriods ?? []).length > 0 ? "some" : "none",
-                "Page Enter": doc.data.pageEnter,
-                "Page Leave": doc.data.pageLeave,
-                "Page URL": doc.data.pageURL,
-                "Note": "For full details, check the database directly."
-            };
+                return {
+                    "ID": doc.id,
+                    "Session": doc.data.sessionId,
+                    "Time": doc.timestamp,
+                    "Mouse": mouseMoves.length > 0 ? "moved" : "none",
+                    "Mouse Count": mouseMoves.length,
+                    "Click": clicks.length > 0 ? "clicked" : "none",
+                    "Click Count": clicks.length,
+                    "Scroll": scrolls.length > 0 ? "scrolled" : "none",
+                    "Scroll Count": scrolls.length,
+                    "Key Events": keyEvents.length > 0 ? "some" : "none",
+                    "Key Events Count": keyEvents.length,
+                    "Errors": errors.length > 0 ? "some" : "none",
+                    "Errors Count": errors.length,
+                    "Idle Periods": idlePeriods.length > 0 ? "some" : "none",
+                    "Idle Periods Count": idlePeriods.length,
+                    "Page Enter": doc.data.pageEnter,
+                    "Page Leave": doc.data.pageLeave,
+                    "Page URL": doc.data.pageURL,
+                    "Note": "For full details, check the database directly."
+                };
+            });
 
             res.json(rData);
         } catch (err) {
