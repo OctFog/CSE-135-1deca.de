@@ -310,37 +310,33 @@ connectDB()
     // ----------------------
     // ACTIVITY ROUTES
     // ----------------------
-    app.get("/api/activity", async (req, res) => {
+    app.get("/api/activity/:id", async (req, res) => {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(400).send("Invalid ID format");
+
         try {
-            const docs = await activityCollection.find({}, { projection: { _id: 0 } }).toArray();
+            const doc = await activityCollection.findOne({ id: id }, { projection: { _id: 0 } });
+            if (!doc) return res.status(404).send("Not found");
 
-            const rData = docs.map(doc => {
-                const mouseMovements = doc.data.mouseMoves ?? [];
-                const clicks = doc.data.clicks ?? [];
-                const scrolls = doc.data.scrolls ?? [];
+            const mouseMoved = (doc.data.mouseMoves ?? []).length > 0 ? "moved" : "none";
+            const clicked = (doc.data.clicks ?? []).length > 0 ? "clicked" : "none";
+            const scrolled = (doc.data.scrolls ?? []).length > 0 ? "scrolled" : "none";
 
-                return {
-                    "ID": doc.id,
-                    "Session": doc.data.sessionId,
-                    "Time": doc.timestamp,
-                    "Mouse X": mouseMovements.map(m => m.x),
-                    "Mouse Y": mouseMovements.map(m => m.y),
-                    "Mouse Time": mouseMovements.map(m => m.time),
-                    "Click X": clicks.map(c => c.x),
-                    "Click Y": clicks.map(c => c.y),
-                    "Click Button": clicks.map(c => c.button),
-                    "Click Time": clicks.map(c => c.time),
-                    "Scroll X": scrolls.map(s => s.scrollX),
-                    "Scroll Y": scrolls.map(s => s.scrollY),
-                    "Scroll Time": scrolls.map(s => s.time),
-                    "Key Events": doc.data.keyEvents ?? [],
-                    "Errors": doc.data.errors ?? [],
-                    "Idle Periods": doc.data.idlePeriods ?? [],
-                    "Page Enter": doc.data.pageEnter,
-                    "Page Leave": doc.data.pageLeave,
-                    "Page URL": doc.data.pageURL
-                };
-            });
+            const rData = {
+                "ID": doc.id,
+                "Session": doc.data.sessionId,
+                "Time": doc.timestamp,
+                "Mouse": mouseMoved,
+                "Click": clicked,
+                "Scroll": scrolled,
+                "Key Events": (doc.data.keyEvents ?? []).length > 0 ? "some" : "none",
+                "Errors": (doc.data.errors ?? []).length > 0 ? "some" : "none",
+                "Idle Periods": (doc.data.idlePeriods ?? []).length > 0 ? "some" : "none",
+                "Page Enter": doc.data.pageEnter,
+                "Page Leave": doc.data.pageLeave,
+                "Page URL": doc.data.pageURL,
+                "Note": "For full details, check the database directly."
+            };
 
             res.json(rData);
         } catch (err) {
