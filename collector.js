@@ -197,7 +197,7 @@ function getNetworkConnectionType() {
     // rtt: 50                → Estimated round-trip time is ~50ms
     // downlink: 10           → Estimated bandwidth is ~10 Mbps
     // saveData: false        → User has not enabled "Data Saver" mode
-}
+
 
 // function getTimingObj() {
 //     return new Promise((resolve) => {
