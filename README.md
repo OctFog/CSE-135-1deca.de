@@ -7,6 +7,8 @@
 ## Links
 - HW3
     - [Checkpoint 3 README](./doc/HW3-CP3.md)
+    - [Dashboard](https://reporting.1deca.de/)
+    - [Detailed Report: Load Performance](https://reporting.1deca.de/load-performance.html)
     - [Notes](./doc/HW3-NOTES.md)
 
 - [HW2 README](./doc/HW2-README.md)
