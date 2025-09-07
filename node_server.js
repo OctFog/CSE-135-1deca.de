@@ -322,34 +322,62 @@ connectDB()
             const docs = await activityCollection.find({}, { projection: { _id: 0 } }).toArray();
 
             const rData = docs.map(doc => {
-                const mouseMoves = doc.data.mouseMoves ?? [];
-                const clicks = doc.data.clicks ?? [];
-                const scrolls = doc.data.scrolls ?? [];
-                const keyEvents = doc.data.keyEvents ?? [];
-                const errors = doc.data.errors ?? [];
-                const idlePeriods = doc.data.idlePeriods ?? [];
+            const mouseMoves = doc.data.mouseMoves ?? [];
+            const clicks = doc.data.clicks ?? [];
+            const scrolls = doc.data.scrolls ?? [];
+            const keyEvents = doc.data.keyEvents ?? [];
+            const errors = doc.data.errors ?? [];
+            const idlePeriods = doc.data.idlePeriods ?? [];
 
-                return {
-                    "ID": doc.id,
-                    "Session": doc.data.sessionId,
-                    "Time": doc.timestamp,
-                    "Mouse": mouseMoves.length > 0 ? "moved" : "none",
-                    "Mouse Count": mouseMoves.length,
-                    "Click": clicks.length > 0 ? "clicked" : "none",
-                    "Click Count": clicks.length,
-                    "Scroll": scrolls.length > 0 ? "scrolled" : "none",
-                    "Scroll Count": scrolls.length,
-                    "Key Events": keyEvents.length > 0 ? "some" : "none",
-                    "Key Events Count": keyEvents.length,
-                    "Errors": errors.length > 0 ? "some" : "none",
-                    "Errors Count": errors.length,
-                    "Idle Periods": idlePeriods.length > 0 ? "some" : "none",
-                    "Idle Periods Count": idlePeriods.length,
-                    "Page Enter": doc.data.pageEnter,
-                    "Page Leave": doc.data.pageLeave,
-                    "Page URL": doc.data.pageURL,
-                    "Note": "For full details, check the database directly."
-                };
+            // Calculate approximate time spent based on timestamps
+            const parseTime = t => t ? new Date(t).getTime() : null;
+
+            const getTimeSpent = arr => {
+                if (arr.length < 2) return 0;
+                const times = arr.map(item => parseTime(item.time)).filter(t => t !== null);
+                if (times.length < 2) return 0;
+                return (Math.max(...times) - Math.min(...times)) / 1000; // in seconds
+            };
+
+            const getIdleTime = arr => arr.reduce((acc, period) => {
+                const start = parseTime(period.start);
+                const end = parseTime(period.end);
+                if (start !== null && end !== null) acc += (end - start) / 1000;
+                return acc;
+            }, 0);
+
+            return {
+                "ID": doc.id,
+                "Session": doc.data.sessionId,
+                "Time": doc.timestamp,
+
+                "Mouse": mouseMoves.length > 0 ? "moved" : "none",
+                "Mouse Count": mouseMoves.length,
+                "Mouse Time Spent (s)": getTimeSpent(mouseMoves),
+
+                "Click": clicks.length > 0 ? "clicked" : "none",
+                "Click Count": clicks.length,
+                "Click Time Spent (s)": getTimeSpent(clicks),
+
+                "Scroll": scrolls.length > 0 ? "scrolled" : "none",
+                "Scroll Count": scrolls.length,
+                "Scroll Time Spent (s)": getTimeSpent(scrolls),
+
+                "Key Events": keyEvents.length > 0 ? "some" : "none",
+                "Key Events Count": keyEvents.length,
+
+                "Errors": errors.length > 0 ? "some" : "none",
+                "Errors Count": errors.length,
+
+                "Idle Periods": idlePeriods.length > 0 ? "some" : "none",
+                "Idle Periods Count": idlePeriods.length,
+                "Idle Time (s)": getIdleTime(idlePeriods),
+
+                "Page Enter": doc.data.pageEnter,
+                "Page Leave": doc.data.pageLeave,
+                "Page URL": doc.data.pageURL,
+                "Note": "For full details, check the database directly."
+            };
             });
 
             res.json(rData);
@@ -358,6 +386,7 @@ connectDB()
             res.status(500).send("Server error");
         }
     });
+
 
 
     app.post("/api/activity", async (req, res) => {
