@@ -174,9 +174,16 @@ function getWindowDimensions() {
 }
 
 function getNetworkConnectionType() {
-    let type = window.navigator.connection.effectiveType;
-    console.log("User's network connection type:", type);
-    return type;
+    if ('connection' in navigator && 'effectiveType' in navigator.connection) {
+        let type = navigator.connection.effectiveType;
+        console.log("User's network connection type:", type);
+        return type;
+    } else {
+        console.log("Network connection type not supported in this browser.");
+        return "unknown"; // fallback value
+    }
+}
+
     // NetworkInformation {
     //     onchange: null,
     //     effectiveType: "4g",
